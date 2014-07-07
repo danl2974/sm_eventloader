@@ -55,6 +55,7 @@ public class LogFileParser {
 			   EventRecordHealthAdvisor eventRecord = new EventRecordHealthAdvisor();
 			   eventRecord.logLine = sLine;
 			   eventRecord.timestamp = Timestamp.valueOf(fields[0]);
+			   //eventRecord.timestamp = fields[0];
 			   eventRecord.emailAddress = fields[1];
 			   eventRecord.mailingId = fields[2];
 			   eventRecord.campaignId = fields[3];
