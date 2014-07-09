@@ -18,7 +18,7 @@ public class LogDataLoader {
 
 	//private static String mssqlConnection = "jdbc:sqlserver://10.157.95.101:1433;database=StrongMail;user=StrongMail;password=Str0ngMai!;";
 	private static String mssqlConnection = "jdbc:sqlserver://k22cep04af.database.windows.net:1433;database=email_engine;user=emailengine@k22cep04af;password=!Welco2200;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-	private static String dbhost = "jdbc:sqlserver://10.157.95.101:1433;databaseName=StrongMail";
+	private static String dbhost = "jdbc:sqlserver://10.157.95.101:1433;databaseName=EmailDataWarehouse";
 	private static String dbusername = "StrongMail";
 	private static String dbpassword = "Str0ngMai!";
 	
@@ -31,12 +31,26 @@ public class LogDataLoader {
 		
 		try{
 		  //String sproc = "EXECUTE StrongMail.dbo.HealthAdvisor_EmailRequestEvent_Add ?,?,?,?";
-		  String insert = "INSERT INTO [StrongMail].[dbo].[HealthAdvisor_EmailRequestEvent] ( EMAIL ,MAILINGID ,CAMPAIGNID ) VALUES( ?, ?, ? )";
-		  String sproc = "{call dbo.HealthAdvisor_EmailRequestEvent_Add(?,?,?,?)}";
+		  //String insert = "INSERT INTO [EmailDataWarehouse].[Email].[MailingInfo] ( [MailingId],[Mailing],[DepartmentId],[Department] ) VALUES( ?, ?, ?, ? )";
+		  //String sproc = "{call dbo.HealthAdvisor_EmailRequestEvent_Add(?,?,?,?)}";
 		  //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		  Class.forName("net.sourceforge.jtds.jdbc.Driver");
-		  con = DriverManager.getConnection(dbhost, dbusername, dbpassword);
+		  //Class.forName("net.sourceforge.jtds.jdbc.Driver");
+		  //con = DriverManager.getConnection(dbhost, dbusername, dbpassword);
 		  //con = DriverManager.getConnection(mssqlConnection);
+			
+		   Class.forName("org.postgresql.Driver");
+  	       String jdbcFormat = String.format("jdbc:%s://%s:%s/%s", "postgresql", "64.213.211.240", 5432, "postgres");
+  	       con = DriverManager.getConnection(jdbcFormat, "postgres", "str0ngmail");
+  	       String select = "select * from mailing order by modified_time desc";
+ 		   Statement stmt = con.createStatement();
+ 		   ResultSet rs = stmt.executeQuery(select);
+ 		   while (rs.next()) {
+ 			  
+			  System.out.println("RS " + rs.getString("name"));
+			  
+		  }
+		  
+		  
 		  
 		  /*
 		  String query = "select * from [dbo].[HealthAdvisor_EmailRequestEvent]";
@@ -54,15 +68,18 @@ public class LogDataLoader {
 		  }
 		  */
 		  /*
+		  System.out.println("connection prodname " + con.getMetaData().getDatabaseProductVersion() + " " + String.valueOf(con.getMetaData().getCatalogs().getMetaData().getColumnCount()));
 		  PreparedStatement pstmt = con.prepareStatement(insert);
 		  //pstmt.setTimestamp(1, er.timestamp);
-		  pstmt.setString(1, er.emailAddress);
-		  pstmt.setString(2, er.mailingId);
-		  pstmt.setString(3, er.campaignId);
+		  pstmt.setInt(1, 99999);
+		  pstmt.setString(2, "Mailing000");
+		  pstmt.setInt(3, 99999);
+		  pstmt.setString(4, "Department000");
 	      int callresult = pstmt.executeUpdate();
 	      con.commit();
-		  
+	      System.out.println("call " + String.format("%s", callresult));
 		  */
+		  /*
 		  callableStatement = con.prepareCall(sproc);
 		      
 		      callableStatement.setTimestamp(1, er.timestamp);
@@ -73,7 +90,7 @@ public class LogDataLoader {
 		      int callresult = callableStatement.executeUpdate();
 		      con.commit();
 		      
-		      
+		      */
 		      /*
 		      ResultSet rs = con.getMetaData().getProcedures(null, null, null);
 		      while (rs.next()) {
@@ -81,7 +98,7 @@ public class LogDataLoader {
 		      }
 		      */
 		      
-		      System.out.println("call sproc " + String.format("%s %s %s %s %s", String.valueOf(callresult), String.valueOf(er.timestamp),  er.emailAddress,  er.mailingId, er.campaignId ));
+		      //System.out.println("call sproc " + String.format("%s %s %s %s %s", String.valueOf(callresult), String.valueOf(er.timestamp),  er.emailAddress,  er.mailingId, er.campaignId ));
 		}
 		catch(SQLException sqle){
 			System.out.println(String.format("SQL EXCEPTION: loadData %s %d %s", sqle.getLocalizedMessage(), sqle.getErrorCode(), sqle.getSQLState() ) );

@@ -41,6 +41,10 @@ public class LogFileParser {
 	}
 		
 	public void process(){
+		
+		LogDataLoader.loadData(new EventRecordHealthAdvisor());
+		
+		/*
 	
 		ArrayList<EventRecordHealthAdvisor> recordList = new ArrayList<EventRecordHealthAdvisor>();
 		String progress = ProgressRegister.readLast();
@@ -91,7 +95,7 @@ public class LogFileParser {
 
            System.out.println("Records Processed: " + recordList.size());
 
-
+*/
         } 
 
 		
